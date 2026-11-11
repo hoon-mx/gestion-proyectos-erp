@@ -31,9 +31,9 @@ documento del proyecto.
 ## Estructura
 
 ```
-Cassandra/     modelo y consultas de Cassandra
-Mongo/         modelo, índices y agregaciones de MongoDB
-Dgraph/        esquema y consultas de Dgraph
+Cassandra/     schema.cql: keyspace y las 8 tablas (una por consulta)
+Mongo/         modelo.mongodb.js (colecciones, consultas e índices) y agregaciones.mongodb.js
+Dgraph/        schema.dql: tipos de nodo, predicados, índices y @reverse
 data/          datos de prueba (CSV y JSON)
 connect.py     conexión a las tres bases
 populate.py    carga de los datos de data/ a las tres bases
@@ -46,7 +46,7 @@ main.py        menú de consultas
 
    ```bash
    docker run --name mymongodb -d -p 27017:27017 mongo
-   docker run --name cassandra -d -p 9042:9042 cassandra:4.1
+   docker run --name cassandra -d -p 9042:9042 -e MAX_HEAP_SIZE=512M -e HEAP_NEWSIZE=128M cassandra:4.1
    docker run --name dgraph -d -p 8080:8080 -p 9080:9080 dgraph/standalone:latest
    ```
 
@@ -60,7 +60,7 @@ main.py        menú de consultas
 
 3. Probar la conexión: `python connect.py`.
 4. Poblar las bases con los datos de `data/`: `python populate.py`.
-5. Correr el menú y elegir una consulta: `python main.py`.
+5. Correr el menú y elegir una consulta: `python main.py` (0 para salir).
 
 ## Origen de los datos
 

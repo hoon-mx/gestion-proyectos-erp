@@ -43,5 +43,26 @@ def print_menu():
     print("\n0 -- Salir")
 
 
+def main():
+    while True:
+        print_menu()
+        option = input("\nElige una consulta: ").strip()
+        if option == "0":
+            print("Hasta luego.")
+            break
+        if not option.isdigit() or not 1 <= int(option) <= 24:
+            print("Opción no válida, elige un número del 0 al 24.")
+            continue
+        option = int(option)
+        if option <= 8:
+            base = "Cassandra"
+        elif option <= 16:
+            base = "MongoDB"
+        else:
+            base = "Dgraph"
+        # Las consultas se conectan con connect.py y se programan en la siguiente entrega.
+        print(f"Consulta {option} ({base}): pendiente para la entrega final.")
+
+
 if __name__ == '__main__':
-    print_menu()
+    main()

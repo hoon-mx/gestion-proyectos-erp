@@ -1,0 +1,87 @@
+# Esquema de Dgraph: tipos de nodo, predicados, índices y @reverse (requerimientos 1 a 8).
+# Se aplica con client.alter(pydgraph.Operation(schema=...)) desde populate.py,
+# o en Ratel: Schema > Bulk Edit.
+
+# ----- atributos -----
+nombre: string @index(exact, term) .
+correo: string @index(hash) .
+puesto: string .
+fecha_ingreso: datetime .
+area: string .
+folio: string @index(hash) .
+titulo: string .
+estado: string @index(hash) .
+prioridad: int .
+fecha_limite: datetime @index(day) .
+horas_estimadas: float .
+codigo: string .
+fecha_inicio: datetime .
+industria: string .
+ubicacion: geo @index(geo) .
+categoria: string .
+
+# ----- relaciones -----
+REPORTA_A: uid @reverse .
+MIEMBRO_DE: uid .
+ASIGNADO_A: [uid] @reverse .
+DEPENDE_DE: [uid] @reverse .
+PERTENECE_A: uid @reverse .
+RESPONSABLE_DE: [uid] .
+TRABAJA_EN: [uid] .
+TIENE_HABILIDAD: [uid] @reverse .
+REQUIERE: [uid] .
+PARA_CLIENTE: uid @reverse .
+
+# ----- tipos -----
+type Empleado {
+  nombre
+  correo
+  puesto
+  fecha_ingreso
+  REPORTA_A
+  MIEMBRO_DE
+  ASIGNADO_A
+  RESPONSABLE_DE
+  TIENE_HABILIDAD
+}
+
+type Equipo {
+  nombre
+  area
+  TRABAJA_EN
+}
+
+type Tarea {
+  folio
+  titulo
+  estado
+  prioridad
+  fecha_limite
+  horas_estimadas
+  DEPENDE_DE
+  PERTENECE_A
+  REQUIERE
+}
+
+type Proyecto {
+  codigo
+  nombre
+  estado
+  fecha_inicio
+  PARA_CLIENTE
+}
+
+type Cliente {
+  nombre
+  industria
+  ubicacion
+}
+
+type Habilidad {
+  nombre
+  categoria
+}
+
+# Facets de las relaciones (se guardan en la mutación, no en el esquema):
+# MIEMBRO_DE (rol, desde) · ASIGNADO_A (horas_asignadas) · TRABAJA_EN (desde)
+# TIENE_HABILIDAD (nivel) · REQUIERE (nivel_minimo)

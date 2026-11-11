@@ -3,7 +3,7 @@
 # o en Ratel: Schema > Bulk Edit.
 
 # ----- atributos -----
-nombre: string @index(exact, term) .
+nombre: string @index(term) .
 correo: string @index(hash) .
 puesto: string .
 fecha_ingreso: datetime .
@@ -21,8 +21,8 @@ ubicacion: geo @index(geo) .
 categoria: string .
 
 # ----- relaciones -----
-REPORTA_A: uid @reverse .
-MIEMBRO_DE: uid .
+REPORTA_A: uid .
+MIEMBRO_DE: uid @reverse .
 ASIGNADO_A: [uid] @reverse .
 DEPENDE_DE: [uid] @reverse .
 PERTENECE_A: uid @reverse .

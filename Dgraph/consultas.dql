@@ -1,0 +1,148 @@
+# Consultas de Dgraph (requerimientos 1 a 8). Cada bloque se corre por separado en Ratel o con pydgraph.
+
+# R1: 
+{
+  antes(func: eq(folio, "T-0142")) @recurse(depth: 5) {
+    folio
+    titulo
+    estado
+    fecha_limite
+    DEPENDE_DE
+    ~ASIGNADO_A
+    nombre
+  }
+  afectadas(func: eq(folio, "T-0142")) @recurse(depth: 5) {
+    folio
+    titulo
+    estado
+    fecha_limite
+    ~DEPENDE_DE @filter(NOT eq(estado, "Terminada"))
+    ~ASIGNADO_A
+    nombre
+  }
+}
+
+# R2: Dependencias de una tarea en los dos sentidos
+{
+  var(func: eq(folio, "T-0142")) {
+    REQUIERE {
+      C as ~TIENE_HABILIDAD
+    }
+  }
+  candidatos(func: uid(C)) {
+    nombre
+    puesto
+    TIENE_HABILIDAD @facets(nivel) {
+      nombre
+    }
+    tareas_abiertas: count(ASIGNADO_A @filter(NOT eq(estado, "Terminada")))
+  }
+}
+
+# R3: Candidatos para una tarea según sus habilidades
+{
+  cadena_de_mando(func: eq(correo, "ana.lopez@consultora.mx")) @recurse(depth: 10) {
+    nombre
+    puesto
+    REPORTA_A
+  }
+}
+
+# R4: Cadena de mando de un empleado
+{
+  A as var(func: eq(correo, "ana.lopez@consultora.mx"))
+  B as var(func: eq(correo, "luis.rios@consultora.mx"))
+  ruta as shortest(from: uid(A), to: uid(B)) {
+    ASIGNADO_A
+    ~ASIGNADO_A
+    DEPENDE_DE
+    ~DEPENDE_DE
+    MIEMBRO_DE
+    ~MIEMBRO_DE
+  }
+  camino(func: uid(ruta)) {
+    nombre
+    folio
+    titulo
+  }
+}
+
+# R5: Ruta de coordinación entre dos empleados (camino más corto)
+{
+  var(func: eq(correo, "ana.lopez@consultora.mx")) {
+    H as TIENE_HABILIDAD
+    ASIGNADO_A {
+      P as PERTENECE_A
+    }
+  }
+  var(func: uid(P)) {
+    ~PERTENECE_A {
+      C as ~ASIGNADO_A
+    }
+  }
+  var(func: uid(C)) {
+    n as count(TIENE_HABILIDAD @filter(uid(H)))
+  }
+  reemplazos(func: uid(C), orderdesc: val(n)) @filter(NOT eq(correo, "ana.lopez@consultora.mx") AND gt(val(n), 0)) {
+    nombre
+    puesto
+    habilidades_en_comun: val(n)
+    TIENE_HABILIDAD @filter(uid(H)) @facets(nivel) {
+      nombre
+    }
+  }
+}
+
+# R6: Reemplazo de un empleado
+{
+  var(func: eq(correo, "ana.lopez@consultora.mx")) {
+    T as ASIGNADO_A @filter(NOT eq(estado, "Terminada") AND le(fecha_limite, "2026-12-10"))
+  }
+  var(func: uid(T)) @recurse(depth: 5) {
+    D as ~DEPENDE_DE @filter(NOT eq(estado, "Terminada"))
+  }
+  en_riesgo(func: uid(T, D), orderasc: fecha_limite) {
+    folio
+    titulo
+    estado
+    fecha_limite
+    PERTENECE_A {
+      nombre
+      PARA_CLIENTE {
+        nombre
+      }
+    }
+  }
+}
+
+# R7: Impacto en cadena si un empleado sale
+{
+  cercanos(func: near(ubicacion, [-103.4175, 20.6080], 10000)) @filter(type(Cliente)) {
+    nombre
+    industria
+    ubicacion
+    ~PARA_CLIENTE @filter(eq(estado, "Activo")) {
+      codigo
+      nombre
+    }
+  }
+}
+
+# R8: Clientes cercanos con proyectos activos
+{
+  O as var(func: allofterms(nombre, "ERP Ferretero")) @filter(type(Proyecto)) {
+    ~PERTENECE_A {
+      W as ~DEPENDE_DE @filter(NOT eq(estado, "Terminada")) {
+        X as PERTENECE_A
+      }
+    }
+  }
+  conectados(func: uid(X)) @filter(NOT uid(O)) {
+    codigo
+    nombre
+    PARA_CLIENTE {
+      nombre
+    }
+    tareas_que_esperan: count(~PERTENECE_A @filter(uid(W)))
+  }
+}

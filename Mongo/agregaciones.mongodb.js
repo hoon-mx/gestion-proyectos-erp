@@ -4,7 +4,7 @@ use("gestion_proyectos");
 
 // R5: avance del proyecto por etapa
 db.tareas.aggregate([
-  { $match: { "proyecto.codigo": "PRJ-2026-014" } },
+  { $match: { "proyecto.nombre": "Implementación ERP Ferretero Jalisco" } },
   { $group: { _id: "$etapa", total_tareas: { $sum: 1 }, horas_estimadas: { $sum: "$horas_estimadas" } } },
   { $sort: { total_tareas: -1 } }
 ]);
@@ -23,7 +23,7 @@ db.tareas.aggregate([
 
 // R7: carga pendiente por empleado en un proyecto
 db.tareas.aggregate([
-  { $match: { "proyecto.codigo": "PRJ-2026-014", "cerrada": false } },
+  { $match: { "proyecto.nombre": "Implementación ERP Ferretero Jalisco", "cerrada": false } },
   { $unwind: "$asignados" },
   { $group: { _id: "$asignados.nombre", tareas_abiertas: { $sum: 1 }, horas_pendientes: { $sum: "$horas_estimadas" } } },
   { $sort: { horas_pendientes: -1 } }

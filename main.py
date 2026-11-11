@@ -13,7 +13,7 @@ def print_menu():
             8: "Hitos alcanzados de un proyecto",
         },
         "MongoDB": {
-            9: "Ficha completa de un proyecto por código",
+            9: "Ficha completa de un proyecto por nombre",
             10: "Tablero de un proyecto por etapa",
             11: "Tareas vencidas de un proyecto",
             12: "Búsqueda de tareas por palabras",
@@ -23,14 +23,14 @@ def print_menu():
             16: "Plantilla de proyecto por tipo de servicio",
         },
         "Dgraph": {
-            17: "Cadena de dependencias de una tarea",
-            18: "Tareas afectadas si una tarea se retrasa",
-            19: "Candidatos para una tarea por habilidad y nivel",
-            20: "Cadena de mando de un empleado",
-            21: "Proyectos y clientes de un equipo",
-            22: "Empleados con experiencia en un cliente",
+            17: "Dependencias de una tarea (antes y afectadas)",
+            18: "Candidatos para una tarea por habilidad y nivel",
+            19: "Cadena de mando de un empleado",
+            20: "Ruta más corta entre dos empleados",
+            21: "Reemplazo de un empleado",
+            22: "Impacto en cadena si un empleado sale",
             23: "Clientes a menos de 10 km con proyectos activos",
-            24: "Tareas vencidas del equipo de un jefe",
+            24: "Proyectos que dependen de otro proyecto",
         },
     }
     print("\n" + "=" * 60)

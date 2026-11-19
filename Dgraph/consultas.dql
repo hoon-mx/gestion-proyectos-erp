@@ -23,6 +23,8 @@
 }
 
 # R2: Candidatos para una tarea según sus habilidades
+# No visto en clase: var(...) corre este bloque sin mostrarlo en el resultado, y "C as" guarda los
+# empleados a los que llega para usarlos abajo con uid(C).
 {
   var(func: eq(folio, "T-0142")) {
     REQUIERE {
@@ -32,7 +34,7 @@
   candidatos(func: uid(C)) {
     nombre
     puesto
-    TIENE_HABILIDAD @facets(nivel) {
+    TIENE_HABILIDAD @facets {
       nombre
     }
     tareas_abiertas: count(ASIGNADO_A @filter(NOT eq(estado, "Terminada")))
@@ -49,6 +51,11 @@
 }
 
 # R4: Ruta de coordinación entre dos empleados (camino más corto)
+# No visto en clase:
+# - "A as var(...)" y "B as var(...)" guardan a los dos empleados sin mostrarlos.
+# - shortest(from: uid(A), to: uid(B)) busca el camino más corto entre ellos por las relaciones que
+#   tiene adentro, y "ruta as" guarda los nodos de ese camino.
+# - camino(func: uid(ruta)) muestra esos nodos.
 {
   A as var(func: eq(correo, "ana.lopez@consultora.mx"))
   B as var(func: eq(correo, "luis.rios@consultora.mx"))
@@ -68,6 +75,11 @@
 }
 
 # R5: Reemplazo de un empleado
+# No visto en clase:
+# - var(...) corre cada bloque sin mostrarlo; "H as", "P as" y "C as" guardan las habilidades de la
+#   empleada, los proyectos de sus tareas y los compañeros que trabajan en esos proyectos.
+# - "n as count(...)" guarda cuántas habilidades comparte cada compañero con ella, y val(n) lee ese
+#   número para ordenar (orderdesc), filtrar (gt) y mostrarlo.
 {
   var(func: eq(correo, "ana.lopez@consultora.mx")) {
     H as TIENE_HABILIDAD
@@ -87,13 +99,15 @@
     nombre
     puesto
     habilidades_en_comun: val(n)
-    TIENE_HABILIDAD @filter(uid(H)) @facets(nivel) {
+    TIENE_HABILIDAD @filter(uid(H)) @facets {
       nombre
     }
   }
 }
 
 # R6: Impacto en cadena si un empleado sale
+# No visto en clase: var(...) corre cada bloque sin mostrarlo; "T as" guarda las tareas abiertas de la
+# empleada y "D as" las que dependen de ellas en cadena. uid(T, D) junta los dos grupos.
 {
   var(func: eq(correo, "ana.lopez@consultora.mx")) {
     T as ASIGNADO_A @filter(NOT eq(estado, "Terminada") AND le(fecha_limite, "2026-12-10"))
@@ -129,6 +143,9 @@
 }
 
 # R8: Proyectos que dependen de otro proyecto
+# No visto en clase: "O as var(...)" guarda el proyecto de origen sin mostrarlo; "W as" guarda las
+# tareas de otros proyectos que esperan a las suyas y "X as" los proyectos de esas tareas.
+# NOT uid(O) quita el proyecto de origen del resultado.
 {
   O as var(func: allofterms(nombre, "ERP Ferretero")) @filter(type(Proyecto)) {
     ~PERTENECE_A {

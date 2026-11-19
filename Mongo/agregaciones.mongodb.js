@@ -1,5 +1,7 @@
 // Agregaciones de MongoDB (requerimientos 5, 6 y 7). Se corren en mongosh.
 
+// No visto en clase: use("...") con paréntesis. En clase se escribe use gestion_proyectos en el shell,
+// pero dentro de un archivo mongosh no acepta esa forma; use("...") es lo mismo escrito como función.
 use("gestion_proyectos");
 
 // R5: avance del proyecto por etapa
@@ -10,6 +12,8 @@ db.tareas.aggregate([
 ]);
 
 // R6: proyectos activos de un cliente que ya consumieron más del 80% de sus horas
+// No visto en clase: $divide divide horas_registradas entre horas_estimadas; $multiply (visto en clase)
+// lo multiplica por 100 para dejarlo en porcentaje.
 db.tareas.aggregate([
   { $match: { "proyecto.cliente": "Grupo Ferretero Jalisco", "proyecto.activo": true, "horas_estimadas": { $gt: 0 } } },
   { $group: { _id: "$proyecto.nombre", horas_estimadas: { $sum: "$horas_estimadas" }, horas_registradas: { $sum: "$horas_registradas" } } },

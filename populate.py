@@ -15,15 +15,16 @@
 #    - cambios.csv: historial de cambios de cada tarea (campo, valor anterior, valor nuevo, quién)
 #
 # 2. MongoDB (connect_mongo)
-#    - Lee proyectos.json, tareas.json y las plantillas, y los inserta con insert_many en las
-#      colecciones proyectos, tareas y plantillas_proyecto.
+#    - Lee proyectos.json (cada proyecto con su plantilla embebida) y tareas.json, y los inserta con
+#      insert_many en las colecciones proyectos y tareas.
 #    - Calcula horas_registradas de cada tarea sumando horas.csv antes de insertarla.
 #    - Crea los índices del modelo: tablero por proyecto, etapa, prioridad y fecha límite;
-#      tareas abiertas por fecha límite; índice de texto en título y descripción; cliente activo.
+#      tareas abiertas por fecha límite; índice de texto en título y descripción; cliente activo;
+#      tipo de servicio del proyecto.
 #
 # 3. Cassandra (connect_cassandra)
-#    - Crea las tablas del modelo (cambios_by_tarea, horas_by_empleado, horas_by_proyecto_mes y las
-#      demás) con CREATE TABLE IF NOT EXISTS.
+#    - Crea las 7 tablas del modelo (cambios_by_tarea, horas_by_empleado, horas_by_proyecto_mes,
+#      actividad_by_proyecto y las demás) con CREATE TABLE IF NOT EXISTS.
 #    - Lee cambios.csv y horas.csv y los inserta con sentencias preparadas y batch por partición,
 #      generando los TIMEUUID con time_uuid a partir de la fecha de cada registro.
 #    - Cada registro de horas se escribe dos veces: por empleado (horas_by_empleado) y por proyecto y

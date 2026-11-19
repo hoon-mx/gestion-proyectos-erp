@@ -31,7 +31,11 @@ CREATE_KEYSPACE = """
 
 def connect_mongo():
     log.info(f"Connecting to MongoDB at {MONGO_URI}")
+    # No visto en clase: serverSelectionTimeoutMS=5000 hace que la conexión falle a los 5 segundos si
+    # Mongo no está arriba, en vez de esperar los 30 que trae por defecto.
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    # No visto en clase: el ping comprueba que Mongo contesta; sin él, MongoClient no avisa que Mongo
+    # está apagado hasta la primera consulta.
     client.admin.command('ping')
     return client[MONGO_DB]
 
@@ -49,6 +53,7 @@ def connect_dgraph():
     log.info(f"Connecting to Dgraph at {DGRAPH_URI}")
     client_stub = pydgraph.DgraphClientStub(DGRAPH_URI)
     client = pydgraph.DgraphClient(client_stub)
+    # No visto en clase: check_version() le pide su versión a Dgraph para comprobar que contesta.
     client.check_version()
     return client
 
@@ -61,4 +66,4 @@ if __name__ == '__main__':
     print(f"Cassandra conectado, keyspace: {session.keyspace}")
 
     client = connect_dgraph()
-    print(f"Dgraph conectado, versión: {client.check_version()}")
+    print(f"Dgraph conectado, versión: {client.check_version()}")  # check_version(): ver connect_dgraph()

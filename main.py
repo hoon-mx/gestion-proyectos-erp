@@ -7,7 +7,7 @@ def print_menu():
             2: "Horas de un empleado en una quincena",
             3: "Horas de un proyecto en un mes para facturar",
             4: "Últimos 30 eventos de actividad de un proyecto",
-            5: "Movimientos del tablero en un día",
+            5: "Actividad de un proyecto en un día",
             6: "Tareas cerradas por un empleado en un mes",
             7: "Reportes semanales de estado de un proyecto",
             8: "Hitos alcanzados de un proyecto",
@@ -20,7 +20,7 @@ def print_menu():
             13: "Avance por etapa (agregación)",
             14: "Proyectos de un cliente que pasan el 80% de sus horas (agregación)",
             15: "Carga pendiente por empleado (agregación)",
-            16: "Plantilla de proyecto por tipo de servicio",
+            16: "Proyectos de un tipo de servicio con su plantilla",
         },
         "Dgraph": {
             17: "Dependencias de una tarea (antes y afectadas)",

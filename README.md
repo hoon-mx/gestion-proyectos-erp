@@ -21,7 +21,7 @@ Cada parte vive en la base que mejor la resuelve:
 
 | Base | Qué guarda | Por qué |
 |---|---|---|
-| **MongoDB** | Proyectos, tareas, descripciones y plantillas de proyecto | Son documentos con estructura flexible (subtareas, etiquetas, asignados) que se leen completos y se agregan por etapa o por cliente. |
+| **MongoDB** | Proyectos (con su plantilla embebida), tareas y descripciones | Son documentos con estructura flexible (subtareas, etiquetas, asignados) que se leen completos y se agregan por etapa o por cliente. |
 | **Dgraph** | Empleados, equipos, tareas, habilidades, proyectos y clientes, con sus relaciones | Las consultas recorren relaciones: cadena de dependencias, cadena de mando, candidatos por habilidad, clientes cercanos. |
 | **Cassandra** | Historial de cambios, horas registradas, actividad y reportes de avance | Son series por llave y tiempo que crecen sin parar y se leen por rango de fechas. |
 
@@ -31,7 +31,7 @@ documento del proyecto.
 ## Estructura
 
 ```
-Cassandra/     schema.cql: keyspace y las 8 tablas (una por consulta)
+Cassandra/     schema.cql: keyspace y las 7 tablas (la tabla 4 sirve a dos consultas)
 Mongo/         modelo.mongodb.js (colecciones, consultas e índices) y agregaciones.mongodb.js
 Dgraph/        schema.dql: tipos de nodo, predicados, índices y @reverse
 data/          datos de prueba (CSV y JSON)

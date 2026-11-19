@@ -2,22 +2,24 @@
 # Se aplica con client.alter(pydgraph.Operation(schema=...)) desde populate.py,
 # o en Ratel: Schema > Bulk Edit.
 
-# ----- atributos -----
-nombre: string @index(term) .
+# ----- atributos con índice (6) -----
+folio: string @index(hash) .
 correo: string @index(hash) .
+nombre: string @index(term) .
+ubicacion: geo @index(geo) .
+estado: string @index(hash) .
+fecha_limite: datetime @index(day) .
+
+# ----- atributos sin índice -----
 puesto: string .
 fecha_ingreso: datetime .
 area: string .
-folio: string @index(hash) .
 titulo: string .
-estado: string @index(hash) .
 prioridad: int .
-fecha_limite: datetime @index(day) .
 horas_estimadas: float .
 codigo: string .
 fecha_inicio: datetime .
 industria: string .
-ubicacion: geo @index(geo) .
 categoria: string .
 
 # ----- relaciones -----

@@ -1,6 +1,6 @@
 # Consultas de Dgraph (requerimientos 1 a 8). Cada bloque se corre por separado en Ratel o con pydgraph.
 
-# R1: 
+# R1: Dependencias de una tarea en los dos sentidos
 {
   antes(func: eq(folio, "T-0142")) @recurse(depth: 5) {
     folio
@@ -22,7 +22,7 @@
   }
 }
 
-# R2: Dependencias de una tarea en los dos sentidos
+# R2: Candidatos para una tarea según sus habilidades
 {
   var(func: eq(folio, "T-0142")) {
     REQUIERE {
@@ -39,7 +39,7 @@
   }
 }
 
-# R3: Candidatos para una tarea según sus habilidades
+# R3: Cadena de mando de un empleado
 {
   cadena_de_mando(func: eq(correo, "ana.lopez@consultora.mx")) @recurse(depth: 10) {
     nombre
@@ -48,7 +48,7 @@
   }
 }
 
-# R4: Cadena de mando de un empleado
+# R4: Ruta de coordinación entre dos empleados (camino más corto)
 {
   A as var(func: eq(correo, "ana.lopez@consultora.mx"))
   B as var(func: eq(correo, "luis.rios@consultora.mx"))
@@ -67,7 +67,7 @@
   }
 }
 
-# R5: Ruta de coordinación entre dos empleados (camino más corto)
+# R5: Reemplazo de un empleado
 {
   var(func: eq(correo, "ana.lopez@consultora.mx")) {
     H as TIENE_HABILIDAD
@@ -93,7 +93,7 @@
   }
 }
 
-# R6: Reemplazo de un empleado
+# R6: Impacto en cadena si un empleado sale
 {
   var(func: eq(correo, "ana.lopez@consultora.mx")) {
     T as ASIGNADO_A @filter(NOT eq(estado, "Terminada") AND le(fecha_limite, "2026-12-10"))
@@ -115,7 +115,7 @@
   }
 }
 
-# R7: Impacto en cadena si un empleado sale
+# R7: Clientes cercanos con proyectos activos
 {
   cercanos(func: near(ubicacion, [-103.4175, 20.6080], 10000)) @filter(type(Cliente)) {
     nombre
@@ -128,7 +128,7 @@
   }
 }
 
-# R8: Clientes cercanos con proyectos activos
+# R8: Proyectos que dependen de otro proyecto
 {
   O as var(func: allofterms(nombre, "ERP Ferretero")) @filter(type(Proyecto)) {
     ~PERTENECE_A {
